@@ -1,14 +1,14 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.css";
 
 export default function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
+  const [nextValue, setNextValue] = useState("X");
 
   console.log("Board");
   const handleClick = (i: number) => {
-    squares[i] = "X";
-    setSquares([...squares]);
+    setSquares(Object.assign([], squares, { [i]: nextValue }));
+    setNextValue(nextValue === "X" ? "O" : "X");
   };
 
   return (
@@ -33,8 +33,6 @@ export default function Board() {
 }
 
 const Square = ({ value, onClick }: { value: number; onClick: any }) => {
-  console.log("Square");
-
   return (
     <button type="button" className="square" onClick={onClick}>
       {value}
