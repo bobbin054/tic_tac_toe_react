@@ -1,12 +1,14 @@
 import { useState } from "react";
 import "./App.css";
 
+// Congratulations! You now have a working tic-tac-toe game
 export default function Board() {
   const [squares, setSquares] = useState(Array<string>(9).fill(""));
   const [value, setValue] = useState("X");
+  const winner = calculateWinner(squares);
+  const tie = !winner && squares.every((square) => square !== "");
 
   console.log("Board");
-  const winner = calculateWinner(squares);
   const handleClick = (i: number) => {
     if (squares[i] || winner) return;
     setSquares(Object.assign([], squares, { [i]: value }));
@@ -16,6 +18,7 @@ export default function Board() {
   return (
     <>
       <div className="status"> {winner && "And the winner is: " + winner}</div>
+      <div className="status"> {tie && "It's a tie!"}</div>
       <div className="board-row">
         <Square value={squares[0]} onClick={() => handleClick(0)} />
         <Square value={squares[1]} onClick={() => handleClick(1)} />
