@@ -1,34 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function Board() {
+  const [squares, setSquares] = useState(Array(9).fill(null));
+
+  console.log("Board");
+  const handleClick = (i: number) => {
+    squares[i] = "X";
+    setSquares([...squares]);
+  };
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <>
+      <div className="board-row">
+        <Square value={squares[0]} onClick={() => handleClick(0)} />
+        <Square value={squares[1]} onClick={() => handleClick(1)} />
+        <Square value={squares[2]} onClick={() => handleClick(2)} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className="board-row">
+        <Square value={squares[3]} onClick={() => handleClick(3)} />
+        <Square value={squares[4]} onClick={() => handleClick(4)} />
+        <Square value={squares[5]} onClick={() => handleClick(5)} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+      <div className="board-row">
+        <Square value={squares[6]} onClick={() => handleClick(6)} />
+        <Square value={squares[7]} onClick={() => handleClick(7)} />
+        <Square value={squares[8]} onClick={() => handleClick(8)} />
+      </div>
+    </>
+  );
 }
 
-export default App
+const Square = ({ value, onClick }: { value: number; onClick: any }) => {
+  console.log("Square");
+
+  return (
+    <button type="button" className="square" onClick={onClick}>
+      {value}
+    </button>
+  );
+};
