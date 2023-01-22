@@ -2,17 +2,20 @@ import { useState } from "react";
 import "./App.css";
 
 export default function Board() {
-  const [squares, setSquares] = useState(Array(9).fill(null));
-  const [nextValue, setNextValue] = useState("X");
+  const [squares, setSquares] = useState(Array<string>(9).fill(""));
+  const [value, setValue] = useState("X");
 
   console.log("Board");
+  const winner = calculateWinner(squares);
   const handleClick = (i: number) => {
-    setSquares(Object.assign([], squares, { [i]: nextValue }));
-    setNextValue(nextValue === "X" ? "O" : "X");
+    if (squares[i] || winner) return;
+    setSquares(Object.assign([], squares, { [i]: value }));
+    setValue(value === "X" ? "O" : "X");
   };
 
   return (
     <>
+      <div className="status"> {winner && "And the winner is: " + winner}</div>
       <div className="board-row">
         <Square value={squares[0]} onClick={() => handleClick(0)} />
         <Square value={squares[1]} onClick={() => handleClick(1)} />
@@ -32,10 +35,30 @@ export default function Board() {
   );
 }
 
-const Square = ({ value, onClick }: { value: number; onClick: any }) => {
+const Square = ({ value, onClick }: { value: string; onClick: any }) => {
   return (
     <button type="button" className="square" onClick={onClick}>
       {value}
     </button>
   );
 };
+
+function calculateWinner(squares: string[]) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
