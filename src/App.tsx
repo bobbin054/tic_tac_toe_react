@@ -1,18 +1,64 @@
 import { useState } from "react";
 import "./App.css";
 
-// Congratulations! You now have a working tic-tac-toe game
-export default function Board() {
-  const [squares, setSquares] = useState(Array<string>(9).fill(""));
-  const [value, setValue] = useState("X");
+export default function Game() {
+  const [history, setHistory] = useState([Array<string>(9).fill("")]);
+  const [stepNumber, setStepNumber] = useState(0);
+  const value = stepNumber % 2 === 0 ? "O" : "X";
+  const currentSquares = history[stepNumber];
+
+  const handlePlay = (nextSquares: string[]) => {
+    const nextHistory = [...history.slice(0, stepNumber + 1), nextSquares];
+    setHistory(nextHistory);
+    setStepNumber(nextHistory.length - 1);
+  };
+
+  function jumpTo(nextMove: number) {
+    setStepNumber(nextMove);
+  }
+
+  const moves = history.map((squares, move) => {
+    let description;
+    if (move > 0) {
+      description = "Go to move #" + move;
+    } else {
+      description = "Go to game start";
+    }
+    return (
+      <li key={move}>
+        <button onClick={() => jumpTo(move)}>{description}</button>
+      </li>
+    );
+  });
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board value={value} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+      <div className="game-info">
+        <ol>{moves}</ol>
+      </div>
+    </div>
+  );
+}
+
+export function Board({
+  value,
+  squares,
+  onPlay,
+}: {
+  value: string;
+  squares: string[];
+  onPlay: (squares: string[]) => void;
+}) {
   const winner = calculateWinner(squares);
   const tie = !winner && squares.every((square) => square !== "");
-
-  console.log("Board");
   const handleClick = (i: number) => {
     if (squares[i] || winner) return;
-    setSquares(Object.assign([], squares, { [i]: value }));
-    setValue(value === "X" ? "O" : "X");
+    const squaresCopy = [...squares];
+    squaresCopy[i] = value;
+    onPlay(squaresCopy);
   };
 
   return (
